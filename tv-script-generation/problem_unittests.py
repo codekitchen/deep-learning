@@ -310,3 +310,22 @@ def test_pick_word(pick_word):
 
     _print_success_message()
 
+
+def get_batches(int_text, batch_size, seq_len):
+    """
+    Return batches of input and target
+    :param int_text: Text with the words replaced by their ids
+    :param batch_size: The size of batch
+    :param seq_length: The length of sequence
+    :return: Batches as a Numpy array
+    """
+    num_batches = len(int_text) // (batch_size * seq_len)
+    text = int_text[:num_batches * batch_size * seq_len]
+    targets = np.append(text[1:], text[0:1])
+    comb = np.stack((text, targets), axis=1)
+    # text = np.split(np.reshape(text, (batch_size, -1)), num_batches, axis=1)
+    # targets = np.split(np.reshape(targets, (batch_size, -1)), num_batches, axis=1)
+    return np.array(np.split(np.reshape(comb, (batch_size, -1)), num_batches, axis=1))
+    # return np.stack((text, targets), axis=1)
+
+test_get_batches(get_batches)
